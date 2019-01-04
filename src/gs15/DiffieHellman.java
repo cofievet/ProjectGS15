@@ -66,7 +66,7 @@ public class DiffieHellman
         return result.mod(mod);
     }
             
-    public static boolean millerWitness(BigInteger a, BigInteger n)
+    private static boolean millerWitness(BigInteger a, BigInteger n)
     {
         // n doit être un entier >= 3
         if (n.mod(TWO).equals(BigInteger.ZERO))
@@ -100,7 +100,7 @@ public class DiffieHellman
         return true;
     }
     
-    public static boolean millerRabinTest(BigInteger n, int k)
+    private static boolean millerRabinTest(BigInteger n, int k)
     {
         for (int i = 0; i < k; i++)
         {
@@ -122,5 +122,33 @@ public class DiffieHellman
             g = new BigInteger(p.bitLength()-1, new Random());
         
         return g;
+    }
+    
+    public static BigInteger[] aliceToBob(BigInteger aliceNumber)
+    {        
+        BigInteger p = generateSafePrime(1024, 10);
+        BigInteger g = getGenerator(p);
+        
+        BigInteger a = fastExponentiation(g, aliceNumber, p);
+        
+        BigInteger[] publicKey = {g, p, a};
+        
+        return publicKey;
+    }
+    
+    public static BigInteger bobToAlice(BigInteger[] aliceKey, BigInteger bobNumber)
+    {
+        BigInteger g = aliceKey[0];
+        BigInteger p = aliceKey[1];
+        BigInteger a = aliceKey[2];
+        
+        BigInteger b = fastExponentiation(g, bobNumber, p);
+        
+        return b;
+    }
+    
+    public static boolean areEquals(BigInteger a, BigInteger b, BigInteger c)
+    {
+        return a.equals(b) ? b.equals(c) : false;
     }
 }
