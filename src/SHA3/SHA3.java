@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gs15;
+package SHA3;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

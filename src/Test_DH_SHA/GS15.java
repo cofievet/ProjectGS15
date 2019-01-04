@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gs15;
+package Test_DH_SHA;
 
+import DiffieHellman.DiffieHellman;
 import java.math.BigInteger;
 import java.util.Random;
 /**
