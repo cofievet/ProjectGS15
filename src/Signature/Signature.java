@@ -1,67 +1,121 @@
 package Signature;
 
+import java.math.BigInteger;
+
+import DiffieHellman.DiffieHellman;
 import Global.Util;
 
 public class Signature {
 	
-	//Algorithme RSA pour signer
+	//Clé du tiers de confiance
+	static BigInteger U = new BigInteger("11");
+	static BigInteger beta = new BigInteger("23");
+	static BigInteger q = new BigInteger("3");
+		
+
+	//Utilisation du l'algorithme RSA pour le chiffrement
+	public static void main (String[] args){
+		GenerateKey();
+	}
 	
+	//Génération de la clé publique d'Alice
 	public static void GenerateKey(){
 		int A = 11;
 		int alpha = 23;
 		int p = 3;
 		
-		int signature = SendKeyAliceToUtt(A, alpha, p);			
-		
+		int[] signatureKey = SendKeyAliceToUtt(A, alpha, p);	
+		boolean verify = VerifyAliceToBob(A, alpha, p, signatureKey);
+		System.out.println("Verification : " + verify);
 	}
 	
-	public static int SendKeyAliceToUtt(int A, int alpha, int p)
-	{
-		int U = 1;
-		int beta = 1;
-		int q = 1;
+	///Fonction permettant de signer la clé publique d'Alice
+	public static int[] SendKeyAliceToUtt(int A, int alpha, int p)
+	{	
+		//Calcul du modulo
+		BigInteger bigModulo = (U .multiply(beta));
 		
-		int n = A * alpha;
-		int phiN = (A - 1) * (alpha - 1);
-			
-		int d = Util.CalculInverse(p, phiN);
-		int s = Util.ExponentiationRapide(111, d, n);
+		//Clé privée
+		int d = CalculPrivateKey(U, beta, q);
+		System.out.println("Clé privée : " + d);
 		
-		return s;
+		//Conversion en BigInteger de la clé privée de l'UTT
+		BigInteger bigD = new BigInteger(d + "");
+
+		int[] array = new int[3];
 		
-		//PHI(n) = (A - 1)(alpha - 1)
-				//d = Calcul de l'inverse de p modulo PHI(n)
-				//Exponentiation rapide de la clé publique^d modulo n
-				//Calcul du S pour
+		//Récupèration de la signature
+		BigInteger s = DiffieHellman.fastExponentiation(new BigInteger(A + ""), bigD, bigModulo);
+		array[0] = s.intValue();
+		
+		System.out.println("Signature de la clé publique : " + s );
+		
+		s = DiffieHellman.fastExponentiation(new BigInteger(alpha + ""), bigD, bigModulo);
+		array[1] = s.intValue();
+
+		System.out.println("Signature de la clé publique : " + s );
+		
+		s = DiffieHellman.fastExponentiation(new BigInteger(p + ""), bigD, bigModulo);
+		array[2] = s.intValue();
+		
+		System.out.println("Signature de la clé publique : " + s );
+		
+		
+		
+		//Retour de la signature de la clé publique d'Alice
+		return array;
 	}
 	
-	public static int VerifyAliceToBob(int message, int signature)
+	public static boolean VerifyAliceToBob(int A, int alpha, int p, int[] signature)
 	{
+		//Récupération de la clé publique du tiers de confiance (UTT)
 		
-		return -1;
+		boolean b = true;
+		//Calcul du modulo
+		BigInteger bigModulo = (U .multiply(beta));
 		
-		//PHI(n) = (A - 1)(alpha - 1)
-				//d = Calcul de l'inverse de p modulo PHI(n)
-				//Exponentiation rapide de la clé publique^d modulo n
-				//Calcul du S pour
+		//Converssion des élements en BigInteger
+		BigInteger bigPow = new BigInteger(p + "");
+		
+		//Récupération de la valeur de la signature initiale
+		BigInteger s = DiffieHellman.fastExponentiation(new BigInteger(signature[0] + ""), q, bigModulo);
+		
+		System.out.println("S1 : " + s);
+		//System.out.println("A : " + A);
+		
+		if(s.intValue() != A)
+			b = false;
+		
+		//Récupération de la valeur de la signature initiale
+		s = DiffieHellman.fastExponentiation(new BigInteger(signature[1]  + ""), q, bigModulo);
+		
+
+		System.out.println("S2 : " + s);
+		//System.out.println("alpha : " + alpha);
+		
+		if(s.intValue() != alpha)
+			b = false;
+		
+		//Récupération de la valeur de la signature initiale
+		s = DiffieHellman.fastExponentiation(new BigInteger(signature[2]  + ""), q, bigModulo);
+		
+
+		System.out.println("S3 : " + s);
+		//System.out.println("p : " + p);
+		
+		if(s.intValue() != p)
+			b = false;
+		
+		return b;
 	}
 	
-	public static int VerifyCertificat(int signature)
+	///Fonction permettan de calculer la clé privée
+	public static int CalculPrivateKey(BigInteger param1, BigInteger param2, BigInteger param3)
 	{
-		int U = 1;
-		int beta = 1;
-		int q = 1;
+		BigInteger phiN = (param1.subtract(BigInteger.ONE)).multiply((param2.subtract(BigInteger.ONE)));
+		int d = Util.CalculInverse(param3, phiN);
 		
-		int n = U * beta;
-		int phiN = (U - 1) * (beta - 1);
-	
-		System.out.println("n : " + n);
-		System.out.println("Phi de N :" + phiN);
-		
-		int d = Util.CalculInverse(q, phiN);
-		int s = Util.ExponentiationRapide(111, d, n);
-		
-		return s;
+		return d;
 	}
 	
 	

@@ -30,7 +30,7 @@ public class GenerateParameters {
 	{
 		this.OrignalKey = originalKey;
 		String copysOriginalKeys = OrignalKey;
-		
+				
 		//Initialisation du tableau qui va contenir la liste des sous clés
 		otherKeys = new ArrayList<String>();
 		

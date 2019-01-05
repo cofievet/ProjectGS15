@@ -168,7 +168,7 @@ public class Util {
 				else
 					inverse += "0";
 			}
-			
+
 			return inverse;
 		}
 		
@@ -180,8 +180,8 @@ public class Util {
 			return k.toString(2);
 		}
 		
-		public static int CalculInverse(int nb, int modulo) {
-			return nb ;
+		public static int CalculInverse(BigInteger nb, BigInteger modulo) {
+			return nb.modInverse(modulo).intValue();
 		}
 		
 		public static int ExponentiationRapide(int nb, int pow, int modulo) {
