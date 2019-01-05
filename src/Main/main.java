@@ -42,7 +42,7 @@ public class main {
 			StringBuilder key = new StringBuilder(originalKey);
 			for(int i = originalKey.length(); i < 128; i++)
 			{
-			key.insert(0,"0");
+				key.insert(0,"0");
 			}
 			originalKey = key.toString();
 		}

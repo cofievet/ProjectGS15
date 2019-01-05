@@ -175,8 +175,8 @@ public class Util {
 		public static String CalculSomme(String key)
 		{
 			BigInteger k = new BigInteger(key, 2);
-			k.add(new BigInteger("65536"));
-
+			new BigInteger("65536").subtract(k);
+			
 			return k.toString(2);
 		}
 		
