@@ -65,7 +65,6 @@ public class GS15 {
         BigInteger basicResult = DiffieHellman.fastExponentiation(g, ab, p);
 
         boolean test = DiffieHellman.areEquals(aliceResult, bobResult, basicResult);
-        System.out.println(test);
     }
     
 }

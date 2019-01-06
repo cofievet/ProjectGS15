@@ -33,11 +33,12 @@ public class DiffieHellman
     
     public static BigInteger fastExponentiation(BigInteger base, BigInteger pow, BigInteger mod)
     {
-//        System.out.println("base :\t" + base + "\npuissance :\t" + pow + "\nmodulo :\t" + mod);
+        //Passage de la puissance en binaire pour savoir quelles puissances multiplier
         String str = pow.toString(2);
+        //Ecriture de la puissance à l'envers pour se conformer au sens d'itération
         StringBuffer binaryPow = new StringBuffer(str).reverse();
-//        System.out.println(binaryPow);
         
+        //Liste des valeurs calculées
         List<BigInteger> modularPow = new LinkedList();
         modularPow.add(base);
                 
@@ -46,8 +47,8 @@ public class DiffieHellman
         
         while(i.compareTo(pow) < 0)
         {
+            //Elevation au carré de la dernière puissance calculée
             BigInteger value = (modularPow.get(k).multiply(modularPow.get(k))).mod(mod);
-//            System.out.println(modularPow.get(k));
             modularPow.add(value);
             k++;
             i = i.multiply(TWO);
@@ -58,14 +59,15 @@ public class DiffieHellman
         for (int j = 0; j < str.length(); j++)
         {
             String bit = Character.toString(binaryPow.charAt(j));
+            //Si la valeur du bit est à 1 (dans l'écriture binaire de la puissance, on multiplie la valeur pour le calcul du résultat
             if (bit.equals("1"))
                 result = result.multiply(modularPow.get(j)).mod(mod);
-//                result *= (Integer.parseInt(tmp) * modularPow.get(i)) % mod;
         }
-//        System.out.println("Resultat :");
+        
         return result.mod(mod);
     }
             
+    //Test du témoin de Miller
     private static boolean millerWitness(BigInteger a, BigInteger n)
     {
         // n doit être un entier >= 3
@@ -80,12 +82,10 @@ public class DiffieHellman
             d = d.divide(TWO);
             s++;
         }
-//        System.out.println("a :\t" + a + "\nd :\t" + d + "\ns :\t" + s + "\nn :\t" + n);
         
         BigInteger x = DiffieHellman.fastExponentiation(a, d, n);
         
-//        System.out.println("a :" + a + "\td :" + d + "\ts: " + s + "\tn :" + n + "\tx : " + x);
-        
+        //Si a^d mod n = 1 ou n -1 alors a n'est pas un témoin de Miller et n est premier avec a
         if (x.equals(BigInteger.ONE) || x.equals(n.subtract(BigInteger.ONE)))
             return false;
         
@@ -100,6 +100,7 @@ public class DiffieHellman
         return true;
     }
     
+    //Test de Rabin Miller
     private static boolean millerRabinTest(BigInteger n, int k)
     {
         for (int i = 0; i < k; i++)
@@ -114,6 +115,9 @@ public class DiffieHellman
     
     public static BigInteger getGenerator(BigInteger p)
     {
+        //p = 2*q + 1 avec q premier
+        //q et 2 sont donc les diviserus de p-1
+        //donc g est générateur si g^2 mod p et g^q mod p sont différents de 1
         BigInteger q = p.subtract(BigInteger.ONE).divide(TWO);
         
         BigInteger g = new BigInteger(p.bitLength()-1, new Random());
