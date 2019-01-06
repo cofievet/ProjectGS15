@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 import com.sun.corba.se.impl.ior.ByteBuffer;
+import com.sun.deploy.uitoolkit.impl.fx.ui.UITextArea;
 
 import IDEA.GenerateParameters;
 import IDEA.SizeKey;
@@ -62,37 +63,20 @@ public class Util {
 		
 		//Fonction permettant de faire une permutation d'un tablau en fonction d'un index
 		public static String PermuteIndexLeft(String chaine, int index)
-		{
-			while(index > chaine.length())
-			{
-				index -= chaine.length();
+		{			
+			if(index < chaine.length()){
+				String copy = chaine.substring(index);
+				copy+= chaine.substring(0, index);
+				return copy;
 			}
-			
-			//On ajoute l'ensemble des élements après l'index
-			String copy = chaine;
-			copy += chaine;
-			
-			//On ajoute l'ensemble des éléments entre 0 et l'index
-			int compteur = 0;
-			
-			char[] tableChar = chaine.toCharArray();
-			char[] copyChar = copy.toCharArray();
-			for(int i = tableChar.length - index; i < tableChar.length; i++)
-			{
-				copyChar[i] = tableChar[compteur];			
-				compteur++;
-			}
-			
-			return copy;
+			return chaine;
 		}
 		
 		//XOR binaire entre 2 tableaux de bytes
 		public static String Xor(String element1, String element2)
 		{
-			int sizeMax = element1.length();
-			if(element2.length() > element1.length())
-				sizeMax = element2.length();
-			
+			int sizeMax = UtilParameters.sizeKey;
+						
 			BigInteger e1 = new BigInteger(element1, 2);
 			BigInteger e2 = new BigInteger(element2, 2);
 			
@@ -111,40 +95,59 @@ public class Util {
 		
 		//Multiplication de deux tableaux de bytes
 		public static String Multiplication(String element1, String element2)
-		{			
+		{	
 			int sizeMax = element1.length();
 			if(element2.length() > element1.length())
 				sizeMax = element2.length();
 			
+			
+			//Création des éléments en biginteger
 			BigInteger e1 = new BigInteger(element1, 2);
 			BigInteger e2 = new BigInteger(element2, 2);
 			
-			BigInteger mod = new BigInteger("65537");
+			if(e1.intValue() == 0)
+				e1 = new BigInteger(UtilParameters.moduloAddition);
 			
+			if(e2.intValue() == 0)
+				e2 = new BigInteger(UtilParameters.moduloAddition);
+			
+			BigInteger mod = new BigInteger(UtilParameters.moduloMultiplication);
+			
+			//Résultat de la multiplication des deux éléments modulo
 			BigInteger result = e1.multiply(e2).mod(mod);
-
+			
+			if(result.add(BigInteger.ONE).equals(mod))
+			{
+				//System.out.println(result.toString(2));
+				result = new BigInteger("0");
+			}
+			
 			StringBuilder resultString = new StringBuilder(result.toString(2));
 			int diff = sizeMax - resultString.length();
 			
 			for(int i = 0; i <diff; i++)
 			{
 				resultString.insert(0, "0");
-			}			
+			}
 			
 			return resultString.toString();
 		}
-		
+				
 		//Addition de 2 tableaux de bytes
 		public static String Addition(String element1, String element2)
-		{		
+		{				
 			int sizeMax = element1.length();
 			if(element2.length() > element1.length())
 				sizeMax = element2.length();
 			
+			//System.out.println(element1 + " " + element2);
+			
 			BigInteger e1 = new BigInteger(element1, 2);
 			BigInteger e2 = new BigInteger(element2, 2);
 			
-			BigInteger result = e1.add(e2);
+			BigInteger mod = new BigInteger(UtilParameters.moduloAddition);
+			
+			BigInteger result = e1.add(e2).mod(mod);
 			
 			StringBuilder resultString = new StringBuilder(result.toString(2));
 			int diff = sizeMax - resultString.length();
@@ -152,7 +155,7 @@ public class Util {
 			for(int i = 0; i <diff; i++)
 			{
 				resultString.insert(0, "0");
-			}			
+			}	
 			
 			return resultString.toString();
 		}
@@ -172,19 +175,52 @@ public class Util {
 			return inverse;
 		}
 		
+		public static String CalculInverse(String value, String modulo)
+		{
+			BigInteger big = new BigInteger(value, 2);
+			BigInteger mod = new BigInteger(modulo);
+			
+			String result = big.modInverse(mod).toString(2);
+			
+			if(result.length() < UtilParameters.sizeKey)
+			{
+				StringBuilder resultString = new StringBuilder(result);
+				int diff = UtilParameters.sizeKey - result.length();
+				
+				for(int i = 0; i < diff; i++)
+				{
+					resultString.insert(0, "0");
+				}	
+				
+				return resultString.toString();
+			}
+			
+			return result;
+		}
+		
 		public static String CalculSomme(String key)
 		{
 			BigInteger k = new BigInteger(key, 2);
-			new BigInteger("65536").subtract(k);
+			k = new BigInteger(UtilParameters.moduloAddition).subtract(k);
+
+			String result = k.toString(2);
+			if(result.length() < UtilParameters.sizeKey)
+			{
+				StringBuilder resultString = new StringBuilder(result);
+				int diff = UtilParameters.sizeKey - result.length();
+				
+				for(int i = 0; i < diff; i++)
+				{
+					resultString.insert(0, "0");
+				}	
+				
+				return resultString.toString();
+			}
 			
 			return k.toString(2);
 		}
 		
 		public static int CalculInverse(BigInteger nb, BigInteger modulo) {
 			return nb.modInverse(modulo).intValue();
-		}
-		
-		public static int ExponentiationRapide(int nb, int pow, int modulo) {
-			return nb ;
 		}
 }
