@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import DiffieHellman.DiffieHellman;
-import Global.Util;
+import IDEA.Util;
 
 public class Signature {
 	

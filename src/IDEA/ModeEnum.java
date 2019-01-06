@@ -3,7 +3,7 @@ package IDEA;
 public enum ModeEnum {
 	modeCBC("CBC"),	
 	modeECB("ECB"),
-	modePCPC("PCPC");
+	modePCBC("PCBC");
 	
 	
 	private String mode;

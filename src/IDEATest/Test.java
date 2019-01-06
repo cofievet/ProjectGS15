@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import com.sun.org.apache.xpath.internal.operations.Equals;
 
-import Global.Util;
+import IDEA.Util;
 import junit.framework.TestCase;
 
 public class Test extends TestCase {

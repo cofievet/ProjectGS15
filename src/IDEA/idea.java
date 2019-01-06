@@ -8,9 +8,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import Global.Util;
-import Global.UtilParameters;
-
 public class idea {
 	
 	public static GenerateParameters parameters;
@@ -49,6 +46,7 @@ public class idea {
 		String chiffreTemp = "";
 		String texteClair = "";
 		String chiffrePrec = "";
+		String xorChifClair = "";
 		for(int i = 0; i < 64; i++)
 		{
 			vecteur += "1";
@@ -61,7 +59,7 @@ public class idea {
 			for (String bloc : blocs) {
 				
 				if(compteur == 1)
-				{
+				{		
 					bloc = Util.Xor(bloc, vecteur);
 					compteur++;
 				}
@@ -69,6 +67,7 @@ public class idea {
 					bloc = Util.Xor(chiffreTemp, bloc);
 				
 				chiffreTemp = CryptageBloc(bloc);
+				//System.out.println("Chiffré : "  + chiffreTemp);	
 				encryptMessage += chiffreTemp;
 			}
 		}
@@ -76,6 +75,8 @@ public class idea {
 		if(mode.GetMode().equals("PCBC"))
 		{
 			for (String bloc : blocs) {
+				
+				texteClair = bloc;
 				if(compteur == 1)
 				{
 					bloc = Util.Xor(bloc, vecteur);
@@ -83,10 +84,13 @@ public class idea {
 				}
 				else
 				{
-					bloc = Util.Xor(chiffreTemp, texteClair);
+					bloc = Util.Xor(xorChifClair, bloc);
 				}
 				
-				texteClair = bloc;
+				chiffreTemp = CryptageBloc(bloc);
+				encryptMessage += chiffreTemp;
+				
+				xorChifClair = Util.Xor(texteClair, chiffreTemp);
 			}
 		}
 		
@@ -144,6 +148,7 @@ public class idea {
 		String dechiffreActuel = "";
 		String chiffrePrec = "";
 		String textClair = "";
+		String xorChifClair = "";
 		
 		for(int i = 0; i < 64; i++)
 		{
@@ -157,32 +162,39 @@ public class idea {
 			for(String bloc : blocs)
 			{
 				dechiffreActuel = DechiffrementBloc(bloc);
-				decryptMessage += dechiffreActuel;
 				
 				if(compteur == 1)
 				{	
 					decryptMessage += Util.Xor(vecteur, dechiffreActuel);
+					//System.out.println("bloc : "  + dechiffreActuel);
 					compteur++;
 				}
 				else
 					decryptMessage += Util.Xor(dechiffreActuel, chiffrePrec);
 				
-
+				chiffrePrec = bloc;
 			}
 		}
 		
 		if(mode.GetMode().equals("PCBC"))
 		{
 			for (String bloc : blocs) {
+				
+				chiffrePrec = bloc;
+				bloc = DechiffrementBloc(bloc);
+				
 				if(compteur == 1)
 				{
-					decryptMessage += Util.Xor(vecteur, dechiffreActuel);
+					textClair = Util.Xor(vecteur, bloc);
 					compteur++;
 				}
 				else
 				{
-					
+					textClair = Util.Xor(xorChifClair, bloc);
 				}
+				
+				xorChifClair = Util.Xor(textClair, chiffrePrec);
+				decryptMessage += textClair;
 			}
 		}
 		

@@ -1,6 +1,4 @@
-package Global;
-
-import IDEA.SizeKey;
+package IDEA;
 
 public class UtilParameters {
 	public static int minRandom = 0;

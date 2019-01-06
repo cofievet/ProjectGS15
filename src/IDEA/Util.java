@@ -1,4 +1,4 @@
-package Global;
+package IDEA;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -7,10 +7,6 @@ import java.util.Random;
 
 import com.sun.corba.se.impl.ior.ByteBuffer;
 import com.sun.deploy.uitoolkit.impl.fx.ui.UITextArea;
-
-import IDEA.GenerateParameters;
-import IDEA.SizeKey;
-import IDEA.idea;
 
 public class Util {
 	
@@ -75,7 +71,9 @@ public class Util {
 		//XOR binaire entre 2 tableaux de bytes
 		public static String Xor(String element1, String element2)
 		{
-			int sizeMax = UtilParameters.sizeKey;
+			int sizeMax = element1.length();
+			if(element2.length() > element1.length())
+				sizeMax = element2.length();
 						
 			BigInteger e1 = new BigInteger(element1, 2);
 			BigInteger e2 = new BigInteger(element2, 2);

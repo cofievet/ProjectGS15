@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-import Global.Util;
-import Global.UtilParameters;
-
 public class GenerateParameters {
 
 	public String OrignalKey;
@@ -71,7 +68,6 @@ public class GenerateParameters {
 			this.otherKeys.add(copys);
 			//System.out.println("Keys copy : " + (i + 1) + " " + Arrays.toString(copys));
 
-			
 			copysOriginalKeys = copysOriginalKeys.substring(UtilParameters.sizeKey);
 			
 			//Si il n'y a plus d'éléments on applique la permutation
