@@ -71,18 +71,22 @@ public class Util {
 		//XOR binaire entre 2 tableaux de bytes
 		public static String Xor(String element1, String element2)
 		{
+			//On récupère la taille max
 			int sizeMax = element1.length();
 			if(element2.length() > element1.length())
 				sizeMax = element2.length();
 						
+			//On créé les biginteger
 			BigInteger e1 = new BigInteger(element1, 2);
 			BigInteger e2 = new BigInteger(element2, 2);
 			
+			//Opération XOR
 			BigInteger result = e1.xor(e2);
 			
 			StringBuilder resultString = new StringBuilder(result.toString(2));
 			int diff = sizeMax - resultString.length();
 			
+			//On ajoute des 0 en cas de différence de taille
 			for(int i = 0; i <diff; i++)
 			{
 				resultString.insert(0, "0");
@@ -94,30 +98,33 @@ public class Util {
 		//Multiplication de deux tableaux de bytes
 		public static String Multiplication(String element1, String element2)
 		{	
+			//On récupère la taille de la clé
 			int sizeMax = UtilParameters.sizeKey;
-			
-			
+						
 			//Création des éléments en biginteger
 			BigInteger e1 = new BigInteger(element1, 2);
 			BigInteger e2 = new BigInteger(element2, 2);
 			
+			//On change 0 en 2^16
 			if(e1.intValue() == 0)
 				e1 = new BigInteger(UtilParameters.moduloAddition);
 			
 			if(e2.intValue() == 0)
 				e2 = new BigInteger(UtilParameters.moduloAddition);
 			
+			//On créé un BigInteger modulo
 			BigInteger mod = new BigInteger(UtilParameters.moduloMultiplication);
 			
 			//Résultat de la multiplication des deux éléments modulo
 			BigInteger result = e1.multiply(e2).mod(mod);
 			
+			//Si c'est egal à 0
 			if(result.add(BigInteger.ONE).equals(mod))
 			{
-				//System.out.println(result.toString(2));
 				result = new BigInteger("0");
 			}
 			
+			//On ajuste la taille du bloc
 			StringBuilder resultString = new StringBuilder(result.toString(2));
 			int diff = sizeMax - resultString.length();
 			
@@ -154,6 +161,7 @@ public class Util {
 			return resultString.toString();
 		}
 		
+		//Fonction permettant de modifier un nombre binaire
 		public static String CalculInverseBinaire(String key)
 		{
 			String inverse = "";
@@ -169,6 +177,7 @@ public class Util {
 			return inverse;
 		}
 		
+		//Fonction permettant de calculer l'inverse modulo
 		public static String CalculInverse(String value, String modulo)
 		{
 			BigInteger big = new BigInteger(value, 2);
