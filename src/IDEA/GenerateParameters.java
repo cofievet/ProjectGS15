@@ -58,7 +58,6 @@ public class GenerateParameters {
 	{
 		this.OrignalKey = originalKey;
 		String copysOriginalKeys = OrignalKey;
-		System.out.println("Clé : " + this.OrignalKey);
 		
 		String decalageOriginalKeys = OrignalKey;
 		

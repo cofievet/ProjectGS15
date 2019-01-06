@@ -1,8 +1,12 @@
 package Global;
 
+import IDEA.SizeKey;
+
 public class UtilParameters {
 	public static int minRandom = 0;
 	public static int maxRandom = 1;
+	
+	public static SizeKey size = SizeKey.size128;
 	
 	public static int decalageLeft = 25;
 	public static int sizeKey = 16;

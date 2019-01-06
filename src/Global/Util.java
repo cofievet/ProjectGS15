@@ -96,9 +96,7 @@ public class Util {
 		//Multiplication de deux tableaux de bytes
 		public static String Multiplication(String element1, String element2)
 		{	
-			int sizeMax = element1.length();
-			if(element2.length() > element1.length())
-				sizeMax = element2.length();
+			int sizeMax = UtilParameters.sizeKey;
 			
 			
 			//Création des éléments en biginteger
@@ -136,9 +134,7 @@ public class Util {
 		//Addition de 2 tableaux de bytes
 		public static String Addition(String element1, String element2)
 		{				
-			int sizeMax = element1.length();
-			if(element2.length() > element1.length())
-				sizeMax = element2.length();
+			int sizeMax = UtilParameters.sizeKey;
 			
 			//System.out.println(element1 + " " + element2);
 			
